@@ -22,7 +22,7 @@
 	 * @type {boolean}
 	 */
 	let loading = false;
-	const url = 'http://webserver:8080';
+	const url = 'http://10.0.0.55:8080';
 
 	/**
 	 * @type {Array<boolean>}

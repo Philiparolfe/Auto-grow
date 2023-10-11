@@ -19,7 +19,7 @@
 	 /**
 	 * @type {string}
 	 */
-	 let url = "http://webserver:8080"
+	 let url = "http://10.0.0.55:8080"
     $: state = null;
     $: outline = "";
 

@@ -12,3 +12,8 @@ export let s3Outline = writable()
 export let s4Outline = writable()
 
 export let switchStatus = writable()
+
+export let humidity_switch = writable()
+
+export let autoStatus = writable()
+

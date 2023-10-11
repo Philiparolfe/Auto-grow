@@ -1,8 +1,9 @@
 <script>
-// @ts-nocheck
+// 
 
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import { humidity_switch } from '../../store';
 	/**
 	 * @type {?number}
 	 */
@@ -14,20 +15,35 @@
 	/**
 	 * @type {string}
 	 */
+	let humidity_switch_status;
+	
+
+
+	/**
+	 * @type {string}
+	 */
 	let outline;
-	const url = 'http://ladypi:8080'
+	const url = 'http://10.0.0.236:8080'
 
     $: state = null;
 	$: humidity;
+	$:humidity_switch_status;
 	$: temp = 0;
 	$: outline;
 
+	humidity_switch.subscribe((value) =>{
+		humidity_switch_status = value
+		state = value
+	})
+
     
 	onMount(() => {
+		status_helper()
 		hum()
 		const interval = setInterval(() => {
+			status_helper()
 			hum()
-		}, 10000);
+		}, 8000);
 
 		return () => {
 			clearInterval(interval);
@@ -68,7 +84,8 @@
 				// Handle the data returned from the Flask endpoint
 				//console.log(data); // Data is now available for use
                 state = data
-                outline = "variant-outline-primary"
+				outline_helper()
+                
                 
 			})
 			.catch((error) => {
@@ -89,7 +106,7 @@
 				// Handle the data returned from the Flask endpoint
 				//console.log(data); // Data is now available for use
                 state = data
-				outline = ""
+				outline_helper()
 			})
 			.catch((error) => {
 				console.error(error);
@@ -97,7 +114,36 @@
         }
 
 	}
+	async function status_helper() {
+		fetch(`${url}/init`)
+			.then((response) => {
+				if (response.ok) {
+					return response.json(); // Parse the response as JSON
+				} else {
+					throw new Error('Request failed');
+				}
+			})
+			.then((data) => {
+				// Handle the data returned from the Flask endpoint
+				//console.log(data); // Data is now available for
+				humidity_switch.set(data[0])
+				outline_helper()
+				//console.log(switches)
+				
+				
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
 
+	function outline_helper(){
+		if (state == true){
+			outline = "variant-outline-primary"
+		}else{
+			outline = ""
+		}
+	}
 
 </script>
 <div class="card {outline}">
